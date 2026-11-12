@@ -1,0 +1,12 @@
+${AnsiColor.BRIGHT_BLUE}
+  _     __  __ ____
+ | |   |  \/  / ___|
+ | |   | |\/| \___ \
+ | |___| |  | |___) |
+ |_____|_|  |_|____/
+${AnsiColor.DEFAULT}
+ :: ${spring.application.name} ::  Leave Management System — Training Artifact, Not for Production Use
+ Java         ${java.version}
+ Spring Boot  ${spring-boot.version}
+ App version  ${api.version}
+

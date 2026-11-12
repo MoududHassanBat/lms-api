@@ -1,0 +1,44 @@
+api:
+  version: 0.0.1
+
+# Shared settings for every environment. Profile files (application-<profile>.yaml)
+# override these. Never set spring.profiles.active here — pick the profile at launch.
+spring:
+  application:
+    name: lms
+
+  # Off by default; only the local profile turns it on.
+  docker:
+    compose:
+      enabled: false
+
+  threads:
+    virtual:
+      enabled: true
+
+  # Flowable writes unqualified table names, so its connections look only in `workflow`.
+  # No `public` fallback: if the schema is missing, startup fails loudly.
+  datasource:
+    hikari:
+      connection-init-sql: SET search_path TO workflow
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate          # Liquibase owns the schema; Hibernate only checks it
+    properties:
+      hibernate:
+        default_schema: common    # unqualified entities (Modulith's event_publication) -> common
+
+  # Reads classpath:db/changelog/db.changelog-master.yaml (the default).
+  liquibase:
+    default-schema: common
+    liquibase-schema: common      # databasechangelog / databasechangeloglock
+
+flowable:
+  database-schema: workflow       # checks for its tables in the same schema it creates them in
+  database-schema-update: true    # training only: Flowable creates/updates its own tables
+  idm:
+    enabled: false                # identity lives in Keycloak only — no ACT_ID_* tables
+  eventregistry:
+    enabled: false                # no Kafka/JMS event channels — no FLW_EV/FLW_CHANNEL tables

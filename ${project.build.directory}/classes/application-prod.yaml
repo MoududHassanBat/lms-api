@@ -1,0 +1,28 @@
+# Deployed environment. Activate with the env var SPRING_PROFILES_ACTIVE=prod.
+# Every value comes from environment variables — no secrets in this file.
+# Docker Compose support is not in the packaged jar, so nothing here starts containers.
+# The DBA creates the database and runs db/init/01-schemas.sql before the first start.
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+
+# Hide the API docs and Swagger UI outside development.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

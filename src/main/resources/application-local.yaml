@@ -1,0 +1,30 @@
+# Local development. Run with: ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+spring:
+  # Starts compose.yaml (postgres, mailpit) with the app and stops it on shutdown.
+  # The Postgres datasource is wired automatically from the running container.
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start-and-stop
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://alpha-idp.oss.net.bd/realms/Leave-MGMT-Test
+
+  # Mailpit catches all mail; read it at http://localhost:8026
+  mail:
+    host: localhost
+    port: 1026
+
+logging:
+  level:
+    gm.gov.lms: DEBUG
+
+# Swagger UI "Authorize": log in with a Keycloak username/password (training only).
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: leave-mgmt-public  # public client, no secret
+    persist-authorization: true     # keep the token across page reloads

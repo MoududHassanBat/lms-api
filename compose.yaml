@@ -1,0 +1,24 @@
+# Local development only — started/stopped by Spring Boot Docker Compose support
+# under the `local` profile. Keycloak is hosted, not run here.
+# Host ports differ from idcms (5432/1025/8025) so both projects can run side by side.
+services:
+  postgres:
+    image: 'postgres:18'
+    environment:
+      - 'POSTGRES_DB=lms'
+      - 'POSTGRES_USER=lms'
+      - 'POSTGRES_PASSWORD=lms'                       # local only; never a real secret
+    ports:
+      - '5433:5432'
+    volumes:
+      - 'lms-pgdata:/var/lib/postgresql'              # Postgres 18 image: mount here, not .../data
+      - './db/init:/docker-entrypoint-initdb.d:ro'    # creates the schemas on an empty volume
+
+  mailpit:                                            # fake SMTP server; web inbox at http://localhost:8026
+    image: 'axllent/mailpit:v1.32.0'
+    ports:
+      - '1026:1025'                                   # SMTP: the app sends here
+      - '8026:8025'                                   # web UI: read the caught emails here
+
+volumes:
+  lms-pgdata:
